@@ -4,7 +4,6 @@
       "name": "windows-gcc-x86",
       "includePath": [
         "${workspaceFolder}/**"
-        //"C:/Users/claud/C Project/vcpkg/packages/libxlsxwriter_x64-windows/include"
       ],
       "compilerPath": "C:/MinGW/bin/gcc.exe",
       "cStandard": "${default}",

@@ -6,8 +6,6 @@
 #include "utilitati.h"
 #include "../Meniuri/meniuri.h"
 #include <stdio.h>
-#include "vcpkg/packages/libxlsxwriter_x64-windows/include/xlsxwriter.h"
-#include "vcpkg/packages/libharu_x64-windows/include/hpdf.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -228,7 +226,7 @@ void detalied_history(int indice) {
     }
 }
 
-void export_to_csv(indice){
+void export_to_csv(int indice){
     FILE *file = fopen("export.csv", "w");
     if (file == NULL) {
         printf("Nu s-a putut crea fisierul\n");
@@ -247,65 +245,13 @@ void export_to_csv(indice){
     printf("Datele au fost exportate în CSV cu succes.\n");
 }
 
-void export_to_excel(int indice){
-    lxw_workbook  *workbook  = workbook_new("export.xlsx");
-    lxw_worksheet *worksheet = workbook_add_worksheet(workbook, NULL);
-
-    // antete
-    worksheet_write_string(worksheet, 0, 0, "Username", NULL);
-    worksheet_write_string(worksheet, 0, 1, "Parola", NULL);
-    worksheet_write_string(worksheet, 0, 2, "Tip Cont", NULL);
-    worksheet_write_string(worksheet, 0, 3, "Balanta", NULL);
-
-    
-    for (int i = 0; i < accounts[indice].numar_tip; i++) {
-        worksheet_write_string(worksheet, i + 1, 0, accounts[indice].Info_User[i].username, NULL);
-        worksheet_write_string(worksheet, i + 1, 1, accounts[indice].Info_User[i].password, NULL);
-        worksheet_write_string(worksheet, i + 1, 2, accounts[indice].Info_User[i].type_account, NULL);
-        worksheet_write_number(worksheet, i + 1, 3, accounts[indice].Info_User[i].total_value, NULL);
-    }
-
-    workbook_close(workbook);
-    printf("Datele au fost exportate în Excel cu succes.\n");
-}
-
-void export_to_pdf(int indice){
-    HPDF_Doc pdf = HPDF_New(error_handler, NULL);
-    HPDF_Page page = HPDF_AddPage(pdf);
-
-    // Configurarea paginii și adăugarea textului
-    HPDF_Page_BeginText(page);
-    HPDF_Page_SetFontAndSize(page, font, 12);
-
-    // Scrierea datelor
-    for (int i = 0; i < MAX_ACCOUNTS; i++) {
-        char buffer[100];
-        sprintf(buffer, "Username: %s, Parola: %s,  Tipul Contului: %s, Balance: %f", accounts[indice].Info_User[i].username, accounts[indice].Info_User[i].password,
-                accounts[indice].Info_User[i].type_account, accounts[indice].Info_User[i].total_value);
-        HPDF_Page_TextOut(page, x_position, y_position, buffer);
-        y_position -= 20; // Mutarea la următorul rând
-    }
-
-    HPDF_Page_EndText(page);
-    HPDF_SaveToFile(pdf, "export.pdf");
-    HPDF_Free(pdf);
-
-    printf("Datele au fost exportate în PDF cu succes.\n");
-}
-
 void export_data(int indice) {
     int choose_extension;
-    printf("Alegeti formatul de export:\n1. CSV\n2. Excel\n3. PDF\nOptiunea dorita este: ");
+    printf("Alegeti formatul de export:\n 1.CSV\n Optiunea dorita este: ");
     scanf("%d", &choose_extension);
     switch (choose_extension) {
         case 1:
             export_to_csv(indice);
-            break;
-        case 2:
-            export_to_excel(indice);
-            break;
-        case 3:
-            export_to_pdf(indice);
             break;
         default:
             printf("Optiune invalida!\n");

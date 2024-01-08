@@ -63,7 +63,9 @@
     "validare.h": "c",
     "structuri.h": "c",
     "date.h": "c",
-    "design.h": "c"
+    "design.h": "c",
+    "hpdf.h": "c",
+    "xlsxwriter.h": "c"
   },
   "git.ignoreLimitWarning": true,
   "C_Cpp.errorSquiggles": "enabled"

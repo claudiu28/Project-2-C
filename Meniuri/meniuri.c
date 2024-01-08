@@ -4,11 +4,26 @@
 #include "../Design/design.h"
 #include "../Utilitati/utilitati.h"
 #include <stdio.h>
+#include <setjmp.h>
+#include <string.h>
+
+jmp_buf exception_buffer;
 
 int contor = 0; int numar_cont = 0;
+void try() {
+    if (setjmp(exception_buffer) == 0) {
+        
+    } else {
+        
+        printf("Exceptie prinsa cu succes!\n");
+    }
+}
 
+void throw_exception() {
+    longjmp(exception_buffer, 1);
+}
 void meniu_principal(){
-    // Afiseaza meniul principal si gestioneaza optiunile utilizatorului
+    try();
     int c, ok = 0, optiune;
     while(ok == 0) {
         meniu_utilizare();
@@ -34,18 +49,25 @@ void meniu_principal(){
                 break;
             default:
                 printf("Optiune invalida\n");
+                throw_exception();
                 break;
         }
     }
 }
-
 void functionalitati_meniu_activat(int indice_user){
     // Afiseaza meniul cu functionalitati dupa autentificarea utilizatorului si gestioneaza optiunile
+    
+    try();
     int ok = 0, optiune;int t;
-    while(ok == 0){
+    while(ok == 0){ int ok_credit = 0;
         meniu_functionalitati();
         for(int i = 0; i < accounts[indice_user].numar_tip; i++){
-            printf("Balanta actuala in fiecare cont este: %f\n", accounts[indice_user].Info_User[i].total_value);
+            if(strcmp(accounts[indice_user].Info_User[i].type_account, "credit") == 0 && ok_credit == 0){
+                ok_credit = 1;
+                accounts[indice_user].Info_User[i].total_value = -accounts[indice_user].Info_User[i].total_value;
+                printf("Balanta actuala in fiecare cont este: %f\n", accounts[indice_user].Info_User[i].total_value);
+            }else{
+            printf("Balanta actuala in fiecare cont este: %f\n", accounts[indice_user].Info_User[i].total_value);}
         }
         printf("Introduceti optiunea dorita:\n");
         scanf("%d", &optiune);int c;
@@ -83,6 +105,7 @@ void functionalitati_meniu_activat(int indice_user){
                 break;
             default:
                 printf("Optiune dorita este invalida!\n");
+                throw_exception();
                 break;
         }
     }
